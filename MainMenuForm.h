@@ -17,7 +17,6 @@ private:
     Button^ btnExit;
     Panel^ panelTitle;
     Label^ lblSubtitle;
-    Label^ lblVersion;
 
 public:
     MainMenuForm()
@@ -61,14 +60,6 @@ private:
         lblSubtitle->TextAlign = ContentAlignment::MiddleCenter;
         panelTitle->Controls->Add(lblSubtitle);
 
-        lblVersion = gcnew Label();
-        lblVersion->Text = L"v2.0";
-        lblVersion->Location = Point(440, 85);
-        lblVersion->Size = Drawing::Size(40, 15);
-        lblVersion->Font = gcnew System::Drawing::Font(L"Arial", 8.0f);
-        lblVersion->ForeColor = Color::FromArgb(80, 160, 80);
-        lblVersion->TextAlign = ContentAlignment::MiddleRight;
-        panelTitle->Controls->Add(lblVersion);
 
         btnKlondike = gcnew Button();
         btnKlondike->Text = L"♣ Косынка";
