@@ -172,41 +172,47 @@ private:
     {
         float baseWidth = 900.0f;
         float baseHeight = 700.0f;
-
+        
         float widthScale = (float)this->ClientSize.Width / baseWidth;
         float heightScale = (float)this->ClientSize.Height / baseHeight;
-
+        
         scaleFactor = Math::Min(widthScale, heightScale);
-
+        
         if (scaleFactor < 0.6f) scaleFactor = 0.6f;
         if (scaleFactor > 1.8f) scaleFactor = 1.8f;
-
+        
         cardWidth = (int)(70 * scaleFactor);
         cardHeight = (int)(100 * scaleFactor);
         pileOffset = (int)(25 * scaleFactor);
         startX = (int)(50 * scaleFactor);
         startY = (int)(200 * scaleFactor);
         topY = (int)(80 * scaleFactor);
-
-        // Обновляем позиции кнопок
+        
+        // Обновляем позиции и размеры кнопок
         btnBack->Location = Point((int)(10 * scaleFactor), (int)(10 * scaleFactor));
         btnBack->Size = Drawing::Size((int)(80 * scaleFactor), (int)(30 * scaleFactor));
+        
         btnNewGame->Location = Point((int)(100 * scaleFactor), (int)(10 * scaleFactor));
         btnNewGame->Size = Drawing::Size((int)(100 * scaleFactor), (int)(30 * scaleFactor));
+        
         btnDeal->Location = Point((int)(210 * scaleFactor), (int)(10 * scaleFactor));
         btnDeal->Size = Drawing::Size((int)(100 * scaleFactor), (int)(30 * scaleFactor));
+        
+        // Обновляем позиции и размеры лейблов
         lblStatus->Location = Point((int)(330 * scaleFactor), (int)(15 * scaleFactor));
         lblStatus->Size = Drawing::Size((int)(250 * scaleFactor), (int)(20 * scaleFactor));
+        
         lblMoves->Location = Point((int)(630 * scaleFactor), (int)(15 * scaleFactor));
         lblMoves->Size = Drawing::Size((int)(100 * scaleFactor), (int)(20 * scaleFactor));
+        
         lblScore->Location = Point((int)(740 * scaleFactor), (int)(15 * scaleFactor));
         lblScore->Size = Drawing::Size((int)(120 * scaleFactor), (int)(20 * scaleFactor));
-
+        
         // Обновляем размер шрифта (жирный)
         int fontSize = (int)(10 * scaleFactor);
         if (fontSize < 8) fontSize = 8;
         if (fontSize > 16) fontSize = 16;
-
+        
         btnBack->Font = gcnew System::Drawing::Font(L"Arial", (float)fontSize, FontStyle::Bold);
         btnNewGame->Font = gcnew System::Drawing::Font(L"Arial", (float)fontSize, FontStyle::Bold);
         btnDeal->Font = gcnew System::Drawing::Font(L"Arial", (float)fontSize, FontStyle::Bold);
@@ -299,7 +305,7 @@ private:
     void UpdateStats()
     {
         lblMoves->Text = L"Ходов: " + movesCount.ToString();
-
+        
         int total = 0;
         if (foundationPiles != nullptr)
         {
@@ -326,12 +332,17 @@ private:
             CalculateScale();
 
             stockPile = gcnew Pile((int)(50 * scaleFactor), topY, false, false);
+            stockPile->SetCardSize(cardWidth, cardHeight, 0);
+            
             wastePile = gcnew Pile((int)(50 * scaleFactor) + cardWidth + (int)(20 * scaleFactor), topY, false, false);
+            wastePile->SetCardSize(cardWidth, cardHeight, 0);
 
             for (int i = 0; i < 4; i++)
             {
                 int xPos = startX + (i + 3) * (cardWidth + (int)(20 * scaleFactor));
-                foundationPiles->Add(gcnew Pile(xPos, topY, true, false));
+                Pile^ pile = gcnew Pile(xPos, topY, true, false);
+                pile->SetCardSize(cardWidth, cardHeight, 0);
+                foundationPiles->Add(pile);
             }
 
             for (int i = 0; i < 7; i++)
@@ -737,11 +748,11 @@ private:
 
         // Запрос имени для рекорда
         String^ name = Microsoft::VisualBasic::Interaction::InputBox(
-            L"Поздравляем! Вы выиграли за " + movesCount.ToString() + L" ходов!\nВведите ваше имя для рекорда:",
-            L"Победа!",
+            L"Поздравляем! Вы выиграли за " + movesCount.ToString() + L" ходов!\nВведите ваше имя для рекорда:", 
+            L"Победа!", 
             L"Игрок",
             -1, -1);
-
+        
         if (!String::IsNullOrEmpty(name))
         {
             Records::AddRecord("Klondike", name, movesCount);
@@ -754,7 +765,6 @@ private:
 
     void btnNewGame_Click(Object^ sender, EventArgs^ e)
     {
-        // Добавлено подтверждение как в пауке
         if (MessageBox::Show("Начать новую игру?", "Подтверждение",
             MessageBoxButtons::YesNo, MessageBoxIcon::Question) == System::Windows::Forms::DialogResult::Yes)
         {
