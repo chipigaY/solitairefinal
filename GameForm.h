@@ -368,7 +368,7 @@ private:
 
             UpdateStats();
             this->Invalidate();
-            lblStatus->Text = L"Новая игра начата!";
+            lblStatus->Text = L"Новая игра начата! Перетаскивайте карты мышкой";
         }
         catch (Exception^ ex)
         {
@@ -754,7 +754,12 @@ private:
 
     void btnNewGame_Click(Object^ sender, EventArgs^ e)
     {
-        InitializeGame();
+        // Добавлено подтверждение как в пауке
+        if (MessageBox::Show("Начать новую игру?", "Подтверждение",
+            MessageBoxButtons::YesNo, MessageBoxIcon::Question) == System::Windows::Forms::DialogResult::Yes)
+        {
+            InitializeGame();
+        }
     }
 
     void btnDeal_Click(Object^ sender, EventArgs^ e)
